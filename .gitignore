@@ -1,0 +1,5 @@
+# The stored bundle is the program alone.
+# venv/ holds the installed tools — rebuild them from the read-me.
+# output/ holds the transcript data files and run progress.
+venv/
+output/
