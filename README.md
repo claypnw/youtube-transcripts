@@ -37,3 +37,40 @@ a final `VERDICT:` line with the counts saved, already had, and skipped.
 
 Built 2026-11-20 on Muse's machine and proven end to end there
 (@FoundMyFitness, one video, full transcript saved).
+
+## The transcripts/ folder in this repository
+
+The `transcripts/` folder holds the words the program pulled, stored here
+with the program at Clay's direction (2026-11-20) so the pulled transcripts
+stand in GitHub, not only on one machine. Each channel has two files:
+
+- `<Channel>_transcripts_20261120.txt` — that channel's combined
+  transcripts, one section per video (title, URL, full transcript text).
+- `<Channel>_done_ids.txt` — the progress record: the number of every
+  video already pulled for that channel. Any future run reads it first
+  and skips those videos, so no transcript is ever pulled twice and an
+  interrupted run picks up where it left off.
+
+### The run that produced these files
+
+Run 2026-11-20 on Muse's machine: Clay's 11 channels, 30 days back, up
+to 120 videos per channel. 100 transcripts saved in all. Per channel
+(counts from the run's own verdict lines):
+
+| Channel | Saved | Videos with no transcript to take |
+|---|---|---|
+| TimcastNews | 43 | 57 |
+| clayandbuck | 26 | 53 |
+| bennyjohnson | 18 | 102 |
+| Timcast | 9 | 20 |
+| southernprepper1 | 3 | 5 |
+| arkansasmountainliving | 1 | 10 |
+| PBDPodcast | 0 | 8 |
+| PinballPreparedness | 0 — no videos found in the last 30 days | — |
+| RubinReport | 0 — no videos found in the last 30 days | — |
+| RealDanBongino | 0 — no videos found in the last 30 days | — |
+| SurvivalLilly | 0 — no videos found in the last 30 days | — |
+
+Channels with no videos found, and PBDPodcast (videos found, none with a
+transcript), have no transcript file. The FoundMyFitness file stands
+from the program's first proof run the same day (1 video).
