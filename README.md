@@ -22,18 +22,73 @@ file, one section per video (title, URL, full transcript text).
 ```
 
 - `--days` — how far back to go (default 30).
-- `--max` — most videos to take (default 120).
+- `--max` — most videos to take (default 120). If the cap is reached the
+  program says so; the run may not be the channel's complete inventory
+  for the window.
+- `--delay LO-HI` — pause range in seconds between fetches
+  (default 12-22; tests use `--delay 0-0`).
+- `--out-dir` — output folder (default `output/` beside the script;
+  tests use a throwaway folder so real progress records stay untouched).
+
+Dates use the America/Phoenix (Arizona) calendar.
 
 ## What it writes
 
 Under `output/` beside the script:
 
-- `<Channel>_transcripts_<YYYYMMDD>.txt` — the combined transcripts.
-- `<Channel>_done_ids.txt` — the progress record. Re-running skips videos
-  already saved, so an interrupted run picks up where it left off.
+- `<Channel>_transcripts_<YYYYMMDD>.txt` — the combined transcripts for
+  the selected window.
+- `cache/<Channel>/<video-id>.json` — the authoritative per-video
+  record: one file per saved transcript (title and full text). The
+  combined file is REBUILT from this cache on every run and after every
+  new save, so it always contains every selected video ever saved for
+  the channel, whatever day it was fetched. A re-run on a later day
+  produces that day's combined file complete — nothing already saved is
+  re-fetched, and nothing already saved is silently dropped.
+- `<Channel>_done_ids.txt` — the progress record, kept in step with the
+  cache. Re-running skips videos already saved, so an interrupted run
+  picks up where it left off. A progress entry with no saved transcript
+  behind it is recovered from any existing combined file for the channel
+  first; if no saved transcript exists anywhere, the video is fetched
+  again rather than skipped.
+- `<Channel>_no_transcript_ids.txt` — videos confirmed to have no
+  captions to take. Only a genuine no-captions outcome lands here (see
+  failure rules below); these are skipped on re-runs too.
 
 Requests are paced with randomized 12–22 second pauses. The program prints
 a final `VERDICT:` line with the counts saved, already had, and skipped.
+
+## Failure rules and exit codes
+
+Failures are classified by the exception's type, never by searching its
+message text (a block message does not contain the word "blocked" in the
+form the old version searched for, which is how blocks were once counted
+as "no transcript").
+
+- Exit 0 — success. A channel with no videos in the window is success
+  and is reported as an empty window, not a failure.
+- Exit 2 — YouTube blocked this machine's address mid-run. The run
+  stops, everything saved so far stands, and the video that hit the
+  block is NOT recorded as no-transcript.
+- Exit 3 — the channel listing itself failed (for example a channel
+  handle that does not exist). Nothing is fetched and nothing is
+  recorded as no-transcript.
+- Exit 4 — a network/transport failure, or an unexpected error, stopped
+  the run. It is never counted as "no transcript".
+
+Only `NoTranscriptFound` / `TranscriptsDisabled` (and per-video
+unavailable outcomes such as a removed video) are recorded in the
+no-transcript record.
+
+## The batch driver
+
+`run_batch.sh` runs the channel list and logs to
+`output/batch-<date>.log`. Each channel's log line states its real
+outcome (DONE, FAILED with its exit code, or BLOCKED). A blocked
+channel halts the batch at once — later channels would be tried from
+the same blocked address. The batch ends with a `BATCH VERDICT:` line
+(completed / failed / blocked counts and the failed channels by name)
+and exits non-zero if any channel failed or the batch was blocked.
 
 Built 2026-11-20 on Muse's machine and proven end to end there
 (@FoundMyFitness, one video, full transcript saved).
