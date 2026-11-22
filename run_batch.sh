@@ -4,7 +4,10 @@
 # Corrected 2026-11-20 after Maggie's review: a channel's real exit code
 # decides its log line — a failure is logged FAILED with its code, never
 # "done". A blocked run (exit 2) halts the whole batch at once, because
-# every later channel would be tried from the same blocked address. The
+# every later channel would be tried from the same blocked address.
+# Since 2026-11-22 exit 2 also covers YouTube's bot-check flag at the
+# listing step ("Sign in to confirm you're not a bot"), so a flagged
+# address stops the batch at the first channel that hits it. The
 # batch ends with a truthful BATCH VERDICT line and exits non-zero if any
 # channel failed or the batch was blocked.
 cd ~/workspace/youtube-transcripts || exit 1
@@ -15,7 +18,17 @@ completed=0
 failed=0
 blocked=0
 failed_channels=""
+first=1
 for handle in TimcastNews bennyjohnson arkansasmountainliving PinballPreparedness southernprepper1 RubinReport clayandbuck PBDPodcast Timcast RealDanBongino SurvivalLilly; do
+  # Pacing between channels (added 2026-11-22): a 180-second pause
+  # before every channel after the first, so a full batch spreads its
+  # asks instead of firing eleven channel listings back to back — part
+  # of what tripped YouTube's bot-check flag on 2026-11-22.
+  if [ "$first" -eq 0 ]; then
+    echo "--- pausing 180 seconds between channels ---" >> "$LOG"
+    sleep 180
+  fi
+  first=0
   echo "=== $handle $(date) ===" >> "$LOG"
   ./venv/bin/python get_transcripts.py "@$handle" --days 30 --max 120 >> "$LOG" 2>&1
   code=$?
