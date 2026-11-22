@@ -32,7 +32,7 @@ Failure handling (corrected 2026-11-20):
   A block or a network/transport failure stops the run, is NOT recorded
   as "no transcript", and exits non-zero, keeping everything saved so far.
 
-Paced with randomized pauses (default 12-22 seconds; --delay 0-0 in tests).
+Paced with randomized pauses (default 25-40 seconds; --delay 0-0 in tests).
 Dates use the America/Phoenix (Arizona) calendar.
 """
 import argparse
@@ -49,6 +49,17 @@ from zoneinfo import ZoneInfo
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "output")
 YTDLP = os.path.join(HERE, "venv", "bin", "yt-dlp")
+# Durable Node.js copy kept in this program's own home: yt-dlp needs a
+# JavaScript runtime to list channels, and the system node at
+# /usr/bin/node can vanish on a machine replacement (that is exactly
+# what failed on 2026-11-20 for RealDanBongino and SurvivalLilly).
+NODE = os.path.join(HERE, "tools", "node")
+if not os.path.exists(NODE):
+    # Fallback for a fresh copy of this program (e.g. from the
+    # repository, where the 122 MB node copy cannot stand): use any
+    # node on the system path.
+    import shutil
+    NODE = shutil.which("node") or "node"
 ARIZONA = ZoneInfo("America/Phoenix")
 
 EXIT_OK = 0
@@ -141,13 +152,14 @@ def get_channel_videos(channel_handle, days_back, max_videos):
     # machine, and --dateafter needs them. --no-check-certificates: this
     # machine's egress proxy presents a self-signed chain yt-dlp rejects.
     cmd = [YTDLP, "--no-check-certificates", "--dump-json",
+           "--js-runtimes", f"node:{NODE}",
            "--dateafter", cutoff,
            "--playlist-end", str(max_videos), url]
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
         raise ListingError(
             f"yt-dlp exited {result.returncode}: "
-            f"{result.stderr.strip()[:300]}")
+            f"{result.stderr.strip()}")
     videos = []
     for line in result.stdout.strip().splitlines():
         if not line:
@@ -273,10 +285,13 @@ def main(argv=None):
     ap.add_argument("handle")
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--max", type=int, default=120)
-    ap.add_argument("--delay", type=parse_delay, default=(12.0, 22.0),
+    ap.add_argument("--delay", type=parse_delay, default=(25.0, 40.0),
                     metavar="LO-HI",
                     help="pause range in seconds between fetches "
-                         "(default 12-22; tests use 0-0)")
+                         "(default 25-40; tests use 0-0). Raised from "
+                         "12-22 on 2026-11-22: the tighter pace helped "
+                         "trip YouTube's bot-check flag on this "
+                         "machine's address.")
     ap.add_argument("--out-dir", default=OUT,
                     help="output folder (default: output/ beside the script)")
     args = ap.parse_args(argv)
@@ -303,6 +318,22 @@ def main(argv=None):
         videos = get_channel_videos(args.handle, args.days, args.max)
     except ListingError as e:
         print(f"ERROR listing channel videos: {e}", file=sys.stderr)
+        # Bot-check at the listing step (added 2026-11-22): YouTube
+        # answering "Sign in to confirm you're not a bot" means this
+        # machine's address is flagged. That is the same stop as a
+        # fetch block — exit 2 so the batch halts at once instead of
+        # burning every remaining channel against a standing flag.
+        # (Text matching is unavoidable here: yt-dlp reports this only
+        # as stderr text, never as a typed exception.)
+        err_text = str(e).lower()
+        if "not a bot" in err_text or "sign in to confirm" in err_text:
+            print(f"VERDICT: FAILED (bot-check flag at listing) — "
+                  f"YouTube is asking for a sign-in to prove this "
+                  f"machine is not a bot; the run stops here and no "
+                  f"further channels are attempted. Nothing was "
+                  f"fetched and nothing was recorded as no-transcript. "
+                  f"File: {output_file}")
+            return EXIT_BLOCKED
         print(f"VERDICT: FAILED — channel listing failed; nothing was "
               f"fetched and nothing was recorded as no-transcript. "
               f"File: {output_file}")
@@ -352,7 +383,7 @@ def main(argv=None):
                 stop_code, stop_reason = EXIT_FETCH_FAILED, "transport failure"
             else:
                 print(f"UNEXPECTED failure ({type(e).__name__}: "
-                      f"{str(e)[:150]}) — stopping; progress is saved. "
+                      f"{e}) — stopping; progress is saved. "
                       f"This video was NOT recorded as no-transcript.")
                 stop_code, stop_reason = EXIT_FETCH_FAILED, "unexpected failure"
             break
