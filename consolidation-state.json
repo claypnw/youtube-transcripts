@@ -1,0 +1,137 @@
+{
+  "channels": {
+    "FoundMyFitness": {
+      "combined": [
+        {
+          "md5": "5c70023835fac2f5fb7bd90636f359ac",
+          "name": "FoundMyFitness_all_transcripts_A.txt",
+          "sha256": "2fe49bd86666982cfb86f61d4ccf2e5892e4546276f3f5327c29d7cdb97179aa",
+          "size": 176874
+        }
+      ],
+      "folded_at": "2026-11-22 14:16 MST (seeded from the standing combined files)",
+      "sources": [
+        {
+          "name": "FoundMyFitness_transcripts_20261120.txt",
+          "sha256": "2fe49bd86666982cfb86f61d4ccf2e5892e4546276f3f5327c29d7cdb97179aa",
+          "size": 176874
+        }
+      ]
+    },
+    "Timcast": {
+      "combined": [
+        {
+          "md5": "b154e3dbc7770ff612b758ac943271de",
+          "name": "Timcast_all_transcripts_A.txt",
+          "sha256": "1ec3b5b80c40a17bb3aa75fbecbd68cab4edb759e718cc844cfca35eac0d1156",
+          "size": 214166
+        }
+      ],
+      "folded_at": "2026-11-22 14:16 MST (seeded from the standing combined files)",
+      "sources": [
+        {
+          "name": "Timcast_transcripts_20261120.txt",
+          "sha256": "1ec3b5b80c40a17bb3aa75fbecbd68cab4edb759e718cc844cfca35eac0d1156",
+          "size": 214166
+        }
+      ]
+    },
+    "TimcastNews": {
+      "combined": [
+        {
+          "md5": "50d724d6cca7c75c95799e9c5633e876",
+          "name": "TimcastNews_all_transcripts_A.txt",
+          "sha256": "7b157f1c06fbe74d773527bb49d47ea414ac5bb84de3859d6c75f1c908481eac",
+          "size": 735126
+        }
+      ],
+      "folded_at": "2026-11-22 14:20 MST",
+      "sources": [
+        {
+          "name": "TimcastNews_transcripts_20261120.txt",
+          "sha256": "ffb347ed9d476a66a21ac022de0a55b88933eecb39fbac6745d9f64884830eab",
+          "size": 679319
+        },
+        {
+          "name": "TimcastNews_transcripts_20261122.txt",
+          "sha256": "b9131853cf324cca7d31dd85e211040289f4b199a721890143ea539a2b85f0e1",
+          "size": 215871
+        }
+      ]
+    },
+    "arkansasmountainliving": {
+      "combined": [
+        {
+          "md5": "8bd9d1928c6d7d010baca48fda00ec59",
+          "name": "arkansasmountainliving_all_transcripts_A.txt",
+          "sha256": "826a168ba5779369f73e2ac33814f7ca432dc7af6799527ccad5cb42694a494e",
+          "size": 15394
+        }
+      ],
+      "folded_at": "2026-11-22 14:16 MST (seeded from the standing combined files)",
+      "sources": [
+        {
+          "name": "arkansasmountainliving_transcripts_20261120.txt",
+          "sha256": "826a168ba5779369f73e2ac33814f7ca432dc7af6799527ccad5cb42694a494e",
+          "size": 15394
+        }
+      ]
+    },
+    "bennyjohnson": {
+      "combined": [
+        {
+          "md5": "14b6c81919e4a6a2de56cd8b88634d84",
+          "name": "bennyjohnson_all_transcripts_A.txt",
+          "sha256": "f5029e2e9aa060ebb92e6a23ccf557db68c7f97681760eb5070b0e5f2f28203f",
+          "size": 170793
+        }
+      ],
+      "folded_at": "2026-11-22 14:16 MST (seeded from the standing combined files)",
+      "sources": [
+        {
+          "name": "bennyjohnson_transcripts_20261120.txt",
+          "sha256": "f5029e2e9aa060ebb92e6a23ccf557db68c7f97681760eb5070b0e5f2f28203f",
+          "size": 170793
+        }
+      ]
+    },
+    "clayandbuck": {
+      "combined": [
+        {
+          "md5": "954c677df44be7375d84b369c2b74448",
+          "name": "clayandbuck_all_transcripts_A.txt",
+          "sha256": "a5bab51365609ffcb7fa78d9f221085738ac6ca15fea65663423aa35a9429273",
+          "size": 308429
+        }
+      ],
+      "folded_at": "2026-11-22 14:16 MST (seeded from the standing combined files)",
+      "sources": [
+        {
+          "name": "clayandbuck_transcripts_20261120.txt",
+          "sha256": "a5bab51365609ffcb7fa78d9f221085738ac6ca15fea65663423aa35a9429273",
+          "size": 308429
+        }
+      ]
+    },
+    "southernprepper1": {
+      "combined": [
+        {
+          "md5": "aada358dd0880355b7be4b70e1b66dff",
+          "name": "southernprepper1_all_transcripts_A.txt",
+          "sha256": "702dee162840cfc227e7e69deda1ca829bf2c4edb7c358ece3007a4abbe4f919",
+          "size": 17137
+        }
+      ],
+      "folded_at": "2026-11-22 14:16 MST (seeded from the standing combined files)",
+      "sources": [
+        {
+          "name": "southernprepper1_transcripts_20261120.txt",
+          "sha256": "702dee162840cfc227e7e69deda1ca829bf2c4edb7c358ece3007a4abbe4f919",
+          "size": 17137
+        }
+      ]
+    }
+  },
+  "updated": "2026-11-22 14:20 MST",
+  "version": 1
+}
